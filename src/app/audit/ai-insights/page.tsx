@@ -755,7 +755,7 @@ function AIInsightsContent() {
         </section>
 
       </div>
-    </>
+    </AuditShell>
   );
 }
 
