@@ -28,19 +28,19 @@ export const metadata: Metadata = {
     siteName: "Sanalyze",
     images: [
       {
-        url: "/og-image.svg",
-        width: 800,
-        height: 800,
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
         alt: "Sanalyze Shield Logo",
       },
     ],
     type: "website",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Sanalyze | Accessibility Auditor",
     description: "Scan websites for accessibility issues and receive practical remediation guidance.",
-    images: ["/og-image.svg"],
+    images: ["/og-image.png"],
   },
   appleWebApp: {
     capable: true,
