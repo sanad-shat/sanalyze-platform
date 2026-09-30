@@ -297,22 +297,22 @@ function InspectorContent() {
   return (
     <AuditShell title="Visual Inspector">
       {/* حاوية مركزة: أضيفت مسافة أمان سفلية مخصصة للهاتف pb-12 sm:pb-2 */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 -mt-5 pb-12 sm:pb-2 space-y-6">
+      {/* حاوية مركزة مع إزالة المسافة السالبة وضبط مسافات الهاتف */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-3 pb-8 space-y-5">
         
-        {/* Navigation Breadcrumb: محاذاة أفقية متجاوبة بدون تكدس */}
-        <div className="flex items-center justify-between gap-2">
+        {/* Navigation Breadcrumb: شريط كبسولة عائم وواضح */}
+        <div className="w-full flex items-center justify-between px-3.5 py-2.5 bg-white dark:bg-[#0c121e] border border-slate-200/80 dark:border-slate-800 rounded-xl shadow-xs">
           <Link
             href="/audit/issues"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white transition shrink-0"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-emerald-600 transition active:scale-95 shrink-0"
           >
-            <ArrowLeft size={14} /> Back to all findings
+            <ArrowLeft size={15} /> <span>Back to all findings</span>
           </Link>
 
-          <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full shrink-0">
+          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-lg shrink-0">
             Finding {currentIndex + 1} of {audit.violations.length}
           </span>
         </div>
-
         {/* Header */}
         <section className="p-5 sm:p-7 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0c121e] shadow-xs">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
