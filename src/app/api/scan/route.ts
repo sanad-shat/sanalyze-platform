@@ -148,25 +148,26 @@ export async function POST(request: NextRequest) {
       timeout: 30000,
     });
 
-    // مهلة انتظار كافية لتحميل عناصر DOM والجافاسكريبت
+  // مهلة انتظار كافية لتحميل عناصر DOM والجافاسكريبت
     await new Promise((resolve) => setTimeout(resolve, 3500));
 
     const pageTitle = await page.title();
     console.log(`[Sanalyze] Page title: "${pageTitle}" (Status: ${response?.status()})`);
 
-  // فحص ذكي لحظر Cloudflare و WAF الفعلي فقط
+    // فحص حقيقي لصفحات الكابتشا والتحدي الأمني الصريحة فقط
     const isBotChallenge = await page.evaluate(() => {
       const title = document.title.toLowerCase();
       const bodyText = document.body ? document.body.innerText.toLowerCase() : "";
-      
-      const isCloudflare = 
-        title.includes("just a moment...") || 
-        (title.includes("attention required") && bodyText.includes("cloudflare")) ||
-        document.querySelector("#challenge-running, #cf-challenge-running") !== null;
 
-      return isCloudflare;
+      const hasCfElements = document.querySelector("#challenge-running, #cf-challenge-running, #challenge-stage") !== null;
+      const isCfTitle = title.includes("just a moment...") || (title.includes("attention required") && bodyText.includes("cloudflare"));
+
+      return hasCfElements || isCfTitle;
     });
 
+    if (isBotChallenge) {
+      throw new Error("Target website blocked automated scanning with bot protection (Cloudflare/WAF).");
+    }
     if (isBotChallenge || response?.status() === 403) {
       throw new Error("Target website blocked automated scanning with bot protection (Cloudflare/WAF).");
     }
