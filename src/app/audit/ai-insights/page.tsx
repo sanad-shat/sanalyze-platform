@@ -444,23 +444,22 @@ function AIInsightsContent() {
 
   return (
     <AuditShell title="AI Insights">
-      {/* مسافة أمان سفلية مخصصة للهاتف pb-12 وللويب pb-2 */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 -mt-5 pb-4 md:pb-2 space-y-6">
-        
-        {/* شريط التنقل العلوي: متقابل في صف واحد دائماً على الهاتف والكمبيوتر */}
-        <div className="w-full flex flex-row items-center justify-between gap-2 px-0.5">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-3 pb-8 space-y-5">
+
+        {/* شريط التنقل العلوي المحسّن كبسولة منفصلة */}
+        <div className="w-full flex items-center justify-between px-3.5 py-2.5 bg-white dark:bg-[#0c121e] border border-slate-200/80 dark:border-slate-800 rounded-xl shadow-xs">
           <Link
             href="/audit/issues"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white transition active:scale-95 shrink-0"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-emerald-600 transition active:scale-95 shrink-0"
           >
-            <ArrowLeft size={14} /> <span>All issues</span>
+            <ArrowLeft size={15} /> <span>All issues</span>
           </Link>
 
           <Link
             href={inspectorHref}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline active:scale-95 shrink-0"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 hover:underline active:scale-95 shrink-0"
           >
-            <Eye size={14} /> <span>Visual Inspector</span>
+            <Eye size={15} /> <span>Visual Inspector</span>
           </Link>
         </div>
 
@@ -473,9 +472,8 @@ function AIInsightsContent() {
                   <Sparkles size={12} /> AI Assisted Remediation
                 </span>
                 <span
-                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-md border ${
-                    severityBadgeColors[severity] || "bg-slate-100 text-slate-600"
-                  }`}
+                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-md border ${severityBadgeColors[severity] || "bg-slate-100 text-slate-600"
+                    }`}
                 >
                   {severity} Impact
                 </span>
@@ -513,10 +511,10 @@ function AIInsightsContent() {
 
         {/* المحتوى الأساسي */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          
+
           {/* العمود الأيسر: الشرح البرمجي ومقارنة الأكواد */}
           <div className="lg:col-span-8 space-y-6">
-            
+
             {/* بطاقة الشرح من الذكاء الاصطناعي */}
             <article className="p-5 sm:p-7 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0c121e] shadow-xs space-y-4">
               <div className="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800/80">
@@ -602,22 +600,20 @@ function AIInsightsContent() {
                   <button
                     type="button"
                     onClick={() => setViewMode("split")}
-                    className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition cursor-pointer ${
-                      viewMode === "split"
-                        ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
-                        : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-                    }`}
+                    className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition cursor-pointer ${viewMode === "split"
+                      ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
+                      : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                      }`}
                   >
                     <Split size={12} className="inline mr-1" /> Side-by-Side
                   </button>
                   <button
                     type="button"
                     onClick={() => setViewMode("unified")}
-                    className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition cursor-pointer ${
-                      viewMode === "unified"
-                        ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
-                        : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-                    }`}
+                    className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition cursor-pointer ${viewMode === "unified"
+                      ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
+                      : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                      }`}
                   >
                     <Terminal size={12} className="inline mr-1" /> Stacked
                   </button>
@@ -634,7 +630,7 @@ function AIInsightsContent() {
 
               {/* حاويات الأكواد */}
               <div className={`grid gap-4 ${viewMode === "split" ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
-                
+
                 {/* العنصر المعيوب الحالي */}
                 <div className="flex flex-col rounded-xl overflow-hidden border border-rose-500/25 bg-slate-950 text-slate-200">
                   <div className="px-3.5 py-2 bg-rose-500/10 border-b border-rose-500/20 flex items-center justify-between">
@@ -759,7 +755,7 @@ function AIInsightsContent() {
         </section>
 
       </div>
-    </AuditShell>
+    </>
   );
 }
 
