@@ -121,13 +121,22 @@ export async function POST(request: NextRequest) {
     const axeSource = await getAxeSource();
 
     // =====================================================
-    // 4. Launch Chromium
+    // 4. Launch Chromium (Cloud via Browserless or Local)
     // =====================================================
-    console.log("[Sanalyze] Launching Chromium");
-    browser = await chromium.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
-    });
+    const browserlessToken = process.env.BROWSERLESS_API_KEY;
+
+    if (browserlessToken) {
+      console.log("[Sanalyze] Connecting to remote Browserless instance");
+      browser = await chromium.connectOverCDP(
+        `wss://chrome.browserless.io?token=${browserlessToken}`
+      );
+    } else {
+      console.log("[Sanalyze] Launching local Chromium");
+      browser = await chromium.launch({
+        headless: true,
+        args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
+      });
+    }
 
     const context = await browser.newContext({
       viewport: {
