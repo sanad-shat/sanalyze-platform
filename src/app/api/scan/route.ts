@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     if (isProduction && browserlessToken) {
       console.log("[Sanalyze] Connecting to remote Browserless instance");
       browser = await puppeteer.connect({
-browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}&stealth=true&--disable-blink-features=AutomationControlled`,
+        browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}&stealth=true&--disable-blink-features=AutomationControlled`,
       });
     } else {
       console.log("[Sanalyze] Launching local Chrome browser");
@@ -123,11 +123,21 @@ browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}&stealt
 
     const page = await browser.newPage();
     await page.setViewport({ width: 1440, height: 900 });
+
+    // استخدام User-Agent بشري طبيعي تماماً بدون أي علامة تشير إلى أداة فحص
     await page.setUserAgent(
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 SanalyzeAudit/1.0"
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
     );
 
-   // Block heavy media only
+    // ترويسات متصفح حقيقي لإقناع أنظمة الحماية
+    await page.setExtraHTTPHeaders({
+      "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
+      "Sec-Ch-Ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+      "Sec-Ch-Ua-Mobile": "?0",
+      "Sec-Ch-Ua-Platform": '"Windows"',
+    });
+
+    // حجب ملفات الوسائط الثقيلة فقط لتسريع الأداء
     await page.setRequestInterception(true);
     page.on("request", (req) => {
       const type = req.resourceType();
@@ -137,17 +147,18 @@ browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}&stealt
         req.continue();
       }
     });
-// 5. Open website
+
+    // 5. Open website
     console.log("[Sanalyze] Opening target page");
     const response = await page.goto(target.toString(), {
       waitUntil: "domcontentloaded",
       timeout: 30000,
     });
 
-    // مهلة انتظار ثابتة لضمان اكتمال تحميل عناصر الـ DOM والتفاعلات دون تعليق
+    // مهلة انتظار لتحميل عناصر الجافاسكريبت والـ DOM
     await new Promise((resolve) => setTimeout(resolve, 3500));
 
-    // فحص ما إذا كان الموقع قام بحجب الصفحة أو إرجاع رمز منع
+    // فحص ما إذا كان الموقع قام بحجب الصفحة عبر العنوان أو كود 403
     const pageTitle = await page.title();
     console.log(`[Sanalyze] Page loaded: "${pageTitle}" (Status: ${response?.status()})`);
 
@@ -159,6 +170,23 @@ browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}&stealt
     ) {
       throw new Error("Target website blocked automated scanning with bot protection (Cloudflare/WAF).");
     }
+
+    // التحقق من أن المتصفح يرى صفحة فعلية بمحتوى حقيقي وليس صفحة بيضاء
+    const pageContentCheck = await page.evaluate(() => {
+      const text = document.body ? document.body.innerText.trim() : "";
+      const elementsCount = document.querySelectorAll("*").length;
+      return {
+        hasSufficientText: text.length > 150,
+        elementsCount,
+      };
+    });
+
+    console.log(`[Sanalyze] Content check: elements=${pageContentCheck.elementsCount}, textLength > 150? ${pageContentCheck.hasSufficientText}`);
+
+    if (pageContentCheck.elementsCount < 20 || !pageContentCheck.hasSufficientText) {
+      throw new Error("The target page returned insufficient or empty content (it may be blocked by bot protection).");
+    }
+
     // 6. Inject axe.min.js
     console.log("[Sanalyze] Injecting axe-core");
     await page.addScriptTag({ content: axeSource });
