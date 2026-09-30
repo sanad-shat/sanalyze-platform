@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     if (isProduction && browserlessToken) {
       console.log("[Sanalyze] Connecting to remote Browserless instance");
       browser = await puppeteer.connect({
-        browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}`,
+browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}&stealth=true&--disable-blink-features=AutomationControlled`,
       });
     } else {
       console.log("[Sanalyze] Launching local Chrome browser");
