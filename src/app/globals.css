@@ -7315,3 +7315,32 @@ footer {
   margin-bottom: 0 !important;
   padding: 16px 0 !important;
 }
+/* تحسين تباعد ووضوح أشرطة التنقل العلوية على الهواتف */
+@media (max-width: 640px) {
+  .inspector-back-row,
+  .ai-back-row {
+    margin-top: 14px !important;
+    margin-bottom: 16px !important;
+    padding: 8px 12px !important;
+    background: var(--panel) !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  .inspector-back,
+  .ai-back-link {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+  }
+
+  .inspector-position,
+  .ai-context-label {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: var(--blue) !important;
+  }
+}
