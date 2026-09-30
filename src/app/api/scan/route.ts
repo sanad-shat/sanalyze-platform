@@ -103,17 +103,23 @@ export async function POST(request: NextRequest) {
     // 3. Read axe-core script
     const axeSource = await getAxeSource();
 
-    // 4. Connect to Cloud Browserless
-    const browserlessToken = process.env.BROWSERLESS_API_KEY;
+    // 4. Launch Browser (Browserless on Vercel, or Local Chrome on localhost)
+    const isProduction = process.env.NODE_ENV === "production" || !!process.env.VERCEL;
+    const browserlessToken = process.env.BROWSERLESS_API_KEY?.trim();
 
-    if (!browserlessToken) {
-      throw new Error("BROWSERLESS_API_KEY is not configured in Vercel.");
+    if (isProduction && browserlessToken) {
+      console.log("[Sanalyze] Connecting to remote Browserless instance");
+      browser = await puppeteer.connect({
+        browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}`,
+      });
+    } else {
+      console.log("[Sanalyze] Launching local Chrome browser");
+      browser = await puppeteer.launch({
+        headless: true,
+        channel: "chrome",
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
     }
-
-    console.log("[Sanalyze] Connecting to remote Browserless instance");
-    browser = await puppeteer.connect({
-      browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}`,
-    });
 
     const page = await browser.newPage();
     await page.setViewport({ width: 1440, height: 900 });
@@ -121,11 +127,11 @@ export async function POST(request: NextRequest) {
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 SanalyzeAudit/1.0"
     );
 
-    // Block heavy assets
+   // Block heavy media only
     await page.setRequestInterception(true);
     page.on("request", (req) => {
       const type = req.resourceType();
-      if (["image", "media", "font"].includes(type)) {
+      if (["media"].includes(type)) {
         req.abort();
       } else {
         req.continue();
@@ -134,11 +140,26 @@ export async function POST(request: NextRequest) {
 
     // 5. Open website
     console.log("[Sanalyze] Opening target page");
-    await page.goto(target.toString(), {
-      waitUntil: "domcontentloaded",
+    const response = await page.goto(target.toString(), {
+      waitUntil: "networkidle2",
       timeout: 30000,
     });
 
+    // مهلة إضافية لضمان اكتمال تحميل عناصر الـ DOM والتفاعلات
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // فحص ما إذا كان الموقع قام بحجب الصفحة أو إرجاع رمز منع
+    const pageTitle = await page.title();
+    console.log(`[Sanalyze] Page loaded: "${pageTitle}" (Status: ${response?.status()})`);
+
+    if (
+      pageTitle.toLowerCase().includes("just a moment") ||
+      pageTitle.toLowerCase().includes("attention required") ||
+      pageTitle.toLowerCase().includes("access denied") ||
+      response?.status() === 403
+    ) {
+      throw new Error("Target website blocked automated scanning with bot protection (Cloudflare/WAF).");
+    }
     // 6. Inject axe.min.js
     console.log("[Sanalyze] Injecting axe-core");
     await page.addScriptTag({ content: axeSource });
@@ -153,12 +174,12 @@ export async function POST(request: NextRequest) {
 
     // 7. Run accessibility audit
     console.log("[Sanalyze] Running axe-core");
-    const axeResults = await page.evaluate(async () => {
+    const axeResults = (await page.evaluate(async () => {
       const axeInstance = (window as any).axe;
       return await axeInstance.run(document, {
         resultTypes: ["violations", "passes", "incomplete"],
       });
-    }) as AxeResults;
+    })) as AxeResults;
 
     // 8. Normalize violations
     const violations = axeResults.violations.map((violation) => ({
