@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -20,6 +20,19 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.svg",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default", // يجعل شريط الآيفون فاتحاً وأيقوناته داكنة
+    title: "Sanalyze",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#f7faff", // لون مطابق لمتغير --bg في globals.css
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -30,8 +43,8 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="dark"
       className={`${sansFont.variable} ${monoFont.variable}`}
+      style={{ backgroundColor: "#f7faff", colorScheme: "light" }}
     >
       <body className="font-sans antialiased">
         {children}
