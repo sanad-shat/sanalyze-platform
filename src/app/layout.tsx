@@ -21,17 +21,39 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.svg",
   },
+  openGraph: {
+    title: "Sanalyze | Accessibility Auditor",
+    description: "Scan websites for accessibility issues and receive practical remediation guidance.",
+    url: "https://sanalyze-platform.vercel.app",
+    siteName: "Sanalyze",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Sanalyze Platform",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sanalyze | Accessibility Auditor",
+    description: "Scan websites for accessibility issues and receive practical remediation guidance.",
+    images: ["/og-image.png"],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Sanalyze",
   },
 };
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#f7faff", // لون مطابق لمتغير --bg في globals.css
+  themeColor: "#f7faff",
   colorScheme: "light",
 };
 
