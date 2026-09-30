@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     if (isProduction && browserlessToken) {
       console.log("[Sanalyze] Connecting to remote Browserless instance");
       browser = await puppeteer.connect({
-        browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}&stealth=true`,
+        browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}&stealth=true&--disable-blink-features=AutomationControlled`,
       });
     } else {
       console.log("[Sanalyze] Launching local Chrome browser");
@@ -122,14 +122,18 @@ export async function POST(request: NextRequest) {
     }
 
     const page = await browser.newPage();
+    
+    // تعطيل قيود CSP للسماح بحقن axe-core في المواقع المشددة مثل W3C
+    await page.setBypassCSP(true);
+
     await page.setViewport({ width: 1440, height: 900 });
 
-    // User-Agent واقعي بالكامل
+    // User-Agent قياسي متطابق مع المتصفحات الحقيقية
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
     );
 
-    // ترويسات متصفح حقيقي
+    // ترويسات متصفح طبيعي
     await page.setExtraHTTPHeaders({
       "Accept-Language": "en-US,en;q=0.9",
       "Sec-Ch-Ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
@@ -144,19 +148,52 @@ export async function POST(request: NextRequest) {
       timeout: 30000,
     });
 
-    // مهلة إضافية لتنفيذ جافاسكريبت الصفحة ورسم المقال
-    await new Promise((resolve) => setTimeout(resolve, 4000));
+    // مهلة انتظار كافية لتحميل عناصر DOM والجافاسكريبت
+    await new Promise((resolve) => setTimeout(resolve, 3500));
 
     const pageTitle = await page.title();
     console.log(`[Sanalyze] Page title: "${pageTitle}" (Status: ${response?.status()})`);
 
-    // 6. Inject axe.min.js
-    console.log("[Sanalyze] Injecting axe-core");
-    await page.addScriptTag({ content: axeSource });
+    // فحص ما إذا كان الموقع قام بحجب الصفحة أو إرجاع رمز منع
+    if (
+      pageTitle.toLowerCase().includes("just a moment") ||
+      pageTitle.toLowerCase().includes("attention required") ||
+      pageTitle.toLowerCase().includes("access denied") ||
+      response?.status() === 403
+    ) {
+      throw new Error("Target website blocked automated scanning with bot protection (Cloudflare/WAF).");
+    }
 
-    const axeAvailable = await page.evaluate(() => {
+    // 6. Inject axe-core بطريقة ثنائية لتخطي أي قيود أمان
+    console.log("[Sanalyze] Injecting axe-core");
+    
+    // الطريقة الأولى: الحقن المباشر في سياق الـ DOM
+    await page.evaluate((source) => {
+      try {
+        const script = document.createElement("script");
+        script.textContent = source;
+        (document.head || document.documentElement).appendChild(script);
+      } catch (e) {
+        console.error("DOM append error:", e);
+      }
+    }, axeSource);
+
+    // التحقق من جهوزية axe
+    let axeAvailable = await page.evaluate(() => {
       return typeof (window as any).axe !== "undefined";
     });
+
+    // الطريقة البديلة: استخدام addScriptTag إذا لم تتفعل الطريقة الأولى
+    if (!axeAvailable) {
+      try {
+        await page.addScriptTag({ content: axeSource });
+        axeAvailable = await page.evaluate(() => {
+          return typeof (window as any).axe !== "undefined";
+        });
+      } catch (err) {
+        console.error("Fallback script tag error:", err);
+      }
+    }
 
     if (!axeAvailable) {
       throw new Error("axe-core could not be initialized inside the target page.");
@@ -252,9 +289,8 @@ export async function POST(request: NextRequest) {
     const failedRules = violations.length;
     const evaluatedRules = passedChecks + failedRules;
 
-    // حماية صريحة ضد النتائج الوهمية:
-    // إذا كان الموقع كبيراً ولكن عدد القواعد المطبقة أقل من 20 ولم تظهر أي مخالفة، فهذا يعني أن الصفحة لم تفتح محتواها
-    if (evaluatedRules < 20 && failedRules === 0) {
+    // منع النتائج الوهمية (إذا كانت الصفحة فارغة بالكامل ولم تفحص أي قواعد ذات شأن)
+    if (evaluatedRules < 18 && failedRules === 0) {
       throw new Error("Unable to parse page content. The target website blocked the cloud scanner or loaded an empty landing page.");
     }
 
@@ -281,7 +317,7 @@ export async function POST(request: NextRequest) {
       incomplete,
     };
 
-    console.log(`[Sanalyze] Scan completed for ${audit.finalUrl} (Score: ${score}%, Evaluated Rules: ${evaluatedRules})`);
+    console.log(`[Sanalyze] Scan completed for ${audit.finalUrl} (Score: ${score}%, Evaluated: ${evaluatedRules})`);
 
     return NextResponse.json({ success: true, audit });
   } catch (error) {
