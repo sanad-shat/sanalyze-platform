@@ -156,19 +156,16 @@ export async function POST(request: NextRequest) {
 
     // فحص حقيقي لصفحات الكابتشا والتحدي الأمني الصريحة فقط
     const isBotChallenge = await page.evaluate(() => {
-      const title = document.title.toLowerCase();
-      const bodyText = document.body ? document.body.innerText.toLowerCase() : "";
-
       const hasCfElements = document.querySelector("#challenge-running, #cf-challenge-running, #challenge-stage") !== null;
-      const isCfTitle = title.includes("just a moment...") || (title.includes("attention required") && bodyText.includes("cloudflare"));
+      const title = document.title.toLowerCase();
+      const body = document.body ? document.body.innerText.toLowerCase() : "";
+      
+      const isCfTitle = title.includes("just a moment...") || (title.includes("attention required") && body.includes("cloudflare"));
 
       return hasCfElements || isCfTitle;
     });
 
     if (isBotChallenge) {
-      throw new Error("Target website blocked automated scanning with bot protection (Cloudflare/WAF).");
-    }
-    if (isBotChallenge || response?.status() === 403) {
       throw new Error("Target website blocked automated scanning with bot protection (Cloudflare/WAF).");
     }
 
