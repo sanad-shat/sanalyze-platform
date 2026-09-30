@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Sanalyze | Accessibility Auditor",
   description: "Scan websites for accessibility issues and receive practical remediation guidance.",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/icon.svg",
   },
   openGraph: {
     title: "Sanalyze | Accessibility Auditor",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Sanalyze Platform",
+        alt: "Sanalyze Shield Logo",
       },
     ],
     type: "website",
