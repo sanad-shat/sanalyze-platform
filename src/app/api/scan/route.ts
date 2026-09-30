@@ -154,13 +154,20 @@ export async function POST(request: NextRequest) {
     const pageTitle = await page.title();
     console.log(`[Sanalyze] Page title: "${pageTitle}" (Status: ${response?.status()})`);
 
-    // فحص ما إذا كان الموقع قام بحجب الصفحة أو إرجاع رمز منع
-    if (
-      pageTitle.toLowerCase().includes("just a moment") ||
-      pageTitle.toLowerCase().includes("attention required") ||
-      pageTitle.toLowerCase().includes("access denied") ||
-      response?.status() === 403
-    ) {
+  // فحص ذكي لحظر Cloudflare و WAF الفعلي فقط
+    const isBotChallenge = await page.evaluate(() => {
+      const title = document.title.toLowerCase();
+      const bodyText = document.body ? document.body.innerText.toLowerCase() : "";
+      
+      const isCloudflare = 
+        title.includes("just a moment...") || 
+        (title.includes("attention required") && bodyText.includes("cloudflare")) ||
+        document.querySelector("#challenge-running, #cf-challenge-running") !== null;
+
+      return isCloudflare;
+    });
+
+    if (isBotChallenge || response?.status() === 403) {
       throw new Error("Target website blocked automated scanning with bot protection (Cloudflare/WAF).");
     }
 
