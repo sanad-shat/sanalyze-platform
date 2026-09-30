@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     if (isProduction && browserlessToken) {
       console.log("[Sanalyze] Connecting to remote Browserless instance");
       browser = await puppeteer.connect({
-        browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}&stealth=true&--disable-blink-features=AutomationControlled`,
+        browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}&stealth=true`,
       });
     } else {
       console.log("[Sanalyze] Launching local Chrome browser");
@@ -124,28 +124,17 @@ export async function POST(request: NextRequest) {
     const page = await browser.newPage();
     await page.setViewport({ width: 1440, height: 900 });
 
-    // استخدام User-Agent بشري طبيعي تماماً بدون أي علامة تشير إلى أداة فحص
+    // User-Agent واقعي بالكامل
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
     );
 
-    // ترويسات متصفح حقيقي لإقناع أنظمة الحماية
+    // ترويسات متصفح حقيقي
     await page.setExtraHTTPHeaders({
-      "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
+      "Accept-Language": "en-US,en;q=0.9",
       "Sec-Ch-Ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
       "Sec-Ch-Ua-Mobile": "?0",
       "Sec-Ch-Ua-Platform": '"Windows"',
-    });
-
-    // حجب ملفات الوسائط الثقيلة فقط لتسريع الأداء
-    await page.setRequestInterception(true);
-    page.on("request", (req) => {
-      const type = req.resourceType();
-      if (["media"].includes(type)) {
-        req.abort();
-      } else {
-        req.continue();
-      }
     });
 
     // 5. Open website
@@ -155,37 +144,11 @@ export async function POST(request: NextRequest) {
       timeout: 30000,
     });
 
-    // مهلة انتظار لتحميل عناصر الجافاسكريبت والـ DOM
-    await new Promise((resolve) => setTimeout(resolve, 3500));
+    // مهلة إضافية لتنفيذ جافاسكريبت الصفحة ورسم المقال
+    await new Promise((resolve) => setTimeout(resolve, 4000));
 
-    // فحص ما إذا كان الموقع قام بحجب الصفحة عبر العنوان أو كود 403
     const pageTitle = await page.title();
-    console.log(`[Sanalyze] Page loaded: "${pageTitle}" (Status: ${response?.status()})`);
-
-    if (
-      pageTitle.toLowerCase().includes("just a moment") ||
-      pageTitle.toLowerCase().includes("attention required") ||
-      pageTitle.toLowerCase().includes("access denied") ||
-      response?.status() === 403
-    ) {
-      throw new Error("Target website blocked automated scanning with bot protection (Cloudflare/WAF).");
-    }
-
-    // التحقق من أن المتصفح يرى صفحة فعلية بمحتوى حقيقي وليس صفحة بيضاء
-    const pageContentCheck = await page.evaluate(() => {
-      const text = document.body ? document.body.innerText.trim() : "";
-      const elementsCount = document.querySelectorAll("*").length;
-      return {
-        hasSufficientText: text.length > 150,
-        elementsCount,
-      };
-    });
-
-    console.log(`[Sanalyze] Content check: elements=${pageContentCheck.elementsCount}, textLength > 150? ${pageContentCheck.hasSufficientText}`);
-
-    if (pageContentCheck.elementsCount < 20 || !pageContentCheck.hasSufficientText) {
-      throw new Error("The target page returned insufficient or empty content (it may be blocked by bot protection).");
-    }
+    console.log(`[Sanalyze] Page title: "${pageTitle}" (Status: ${response?.status()})`);
 
     // 6. Inject axe.min.js
     console.log("[Sanalyze] Injecting axe-core");
@@ -289,6 +252,12 @@ export async function POST(request: NextRequest) {
     const failedRules = violations.length;
     const evaluatedRules = passedChecks + failedRules;
 
+    // حماية صريحة ضد النتائج الوهمية:
+    // إذا كان الموقع كبيراً ولكن عدد القواعد المطبقة أقل من 20 ولم تظهر أي مخالفة، فهذا يعني أن الصفحة لم تفتح محتواها
+    if (evaluatedRules < 20 && failedRules === 0) {
+      throw new Error("Unable to parse page content. The target website blocked the cloud scanner or loaded an empty landing page.");
+    }
+
     const score =
       evaluatedRules > 0
         ? Math.round((passedChecks / evaluatedRules) * 100)
@@ -312,7 +281,7 @@ export async function POST(request: NextRequest) {
       incomplete,
     };
 
-    console.log(`[Sanalyze] Scan completed for ${audit.finalUrl} (Score: ${score}%)`);
+    console.log(`[Sanalyze] Scan completed for ${audit.finalUrl} (Score: ${score}%, Evaluated Rules: ${evaluatedRules})`);
 
     return NextResponse.json({ success: true, audit });
   } catch (error) {
