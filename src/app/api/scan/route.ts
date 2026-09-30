@@ -137,16 +137,15 @@ export async function POST(request: NextRequest) {
         req.continue();
       }
     });
-
-    // 5. Open website
+// 5. Open website
     console.log("[Sanalyze] Opening target page");
     const response = await page.goto(target.toString(), {
-      waitUntil: "networkidle2",
+      waitUntil: "domcontentloaded",
       timeout: 30000,
     });
 
-    // مهلة إضافية لضمان اكتمال تحميل عناصر الـ DOM والتفاعلات
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // مهلة انتظار ثابتة لضمان اكتمال تحميل عناصر الـ DOM والتفاعلات دون تعليق
+    await new Promise((resolve) => setTimeout(resolve, 3500));
 
     // فحص ما إذا كان الموقع قام بحجب الصفحة أو إرجاع رمز منع
     const pageTitle = await page.title();
