@@ -17,7 +17,7 @@
     "lucide-react": "latest",
     "next": "latest",
     "openai": "^7.23.0",
-    "playwright": "^1.63.0",
+    "playwright-core": "^1.63.0",
     "react": "latest",
     "react-dom": "latest",
     "recharts": "latest"

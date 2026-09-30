@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { chromium, type Browser } from "playwright";
+import { chromium, type Browser } from "playwright-core";
 import fs from "node:fs/promises";
 import path from "node:path";
 
