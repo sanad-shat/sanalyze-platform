@@ -15,6 +15,7 @@ const monoFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://sanalyze-platform.vercel.app"),
   title: "Sanalyze | Accessibility Auditor",
   description: "Scan websites for accessibility issues and receive practical remediation guidance.",
   icons: {
@@ -22,11 +23,10 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default", // يجعل شريط الآيفون فاتحاً وأيقوناته داكنة
+    statusBarStyle: "default",
     title: "Sanalyze",
   },
 };
-
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
