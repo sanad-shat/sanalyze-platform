@@ -343,9 +343,9 @@ export default function Home() {
                         WCAG 4.1.2
                       </span>
                     </div>
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                      Buttons must have discernible text
-                    </h3>
+                    <h2 className="text-sm font-bold text-slate-900 dark:text-white">
+  Buttons must have discernible text
+</h2>
                     <p className="text-[10px] text-slate-400 mt-0.5 font-mono">Rule: button-name</p>
                   </div>
                   <span className="text-[10px] text-slate-400 font-medium hidden sm:inline">Captured Finding</span>
@@ -461,7 +461,7 @@ export default function Home() {
                   <TriangleAlert size={11} />
                   Detected issue
                 </span>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Missing alternative text</h3>
+                <h2 className="text-sm font-bold text-slate-900 dark:text-white">Missing alternative text</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                   Informative elements must provide accessible name alternatives.
                 </p>
@@ -612,9 +612,9 @@ export default function Home() {
               <ShieldCheck size={24} />
             </div>
             <div className="space-y-0.5">
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">
                 Start with a focused accessibility audit.
-              </h3>
+              </h2>
               <p className="text-xs text-slate-600 dark:text-slate-400 max-w-lg">
                 Scan any live web page, review automated violations, inspect DOM nodes, and export executive PDF reports.
               </p>

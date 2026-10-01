@@ -61,7 +61,7 @@ function InlineLogo() {
       {/* كتابة الاسم والسطر الفرعي */}
       <div className="flex flex-col text-left">
         <span className="text-base font-black tracking-tight text-slate-900 dark:text-white leading-tight">
-          SAN<span className="text-emerald-500">ALYZE</span>
+          SAN<span className="text-emerald-700 dark:text-emerald-400">ALYZE</span>
         </span>
         <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase leading-none mt-0.5">
           AUDIT CONSOLE

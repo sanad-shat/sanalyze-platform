@@ -236,7 +236,7 @@ function ScanContent() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#070b12] text-slate-800 dark:text-slate-100 flex flex-col justify-between antialiased selection:bg-emerald-500/20 selection:text-emerald-400">
-      
+
       {/* خلفية متناسقة */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-emerald-500/10 dark:bg-emerald-500/5 blur-[120px] rounded-full" />
@@ -259,14 +259,13 @@ function ScanContent() {
 
       {/* المحتوى */}
       <main className="relative z-10 max-w-xl w-full mx-auto px-4 sm:px-6 py-8 md:py-12 flex-1 flex flex-col justify-center">
-        
+
         <div className="text-center space-y-2.5 mb-7">
           <div
-            className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold ${
-              error
-                ? "text-rose-700 dark:text-rose-400 bg-rose-500/10 border border-rose-500/20"
-                : "text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
-            }`}
+            className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold ${error
+              ? "text-rose-700 dark:text-rose-400 bg-rose-500/10 border border-rose-500/20"
+              : "text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
+              }`}
           >
             {error ? (
               <CircleAlert size={14} className="text-rose-500" />
@@ -346,9 +345,8 @@ function ScanContent() {
               return (
                 <div
                   key={title}
-                  className={`p-4 sm:p-4.5 flex items-start gap-3.5 transition-colors ${
-                    active ? "bg-emerald-50/40 dark:bg-emerald-950/20" : ""
-                  }`}
+                  className={`p-4 sm:p-4.5 flex items-start gap-3.5 transition-colors ${active ? "bg-emerald-50/40 dark:bg-emerald-950/20" : ""
+                    }`}
                 >
                   <div className="mt-0.5 shrink-0">
                     {complete ? (
@@ -375,43 +373,40 @@ function ScanContent() {
                             active
                               ? "text-emerald-600 dark:text-emerald-400"
                               : complete
-                              ? "text-slate-700 dark:text-slate-300"
-                              : "text-slate-400"
+                                ? "text-slate-700 dark:text-slate-300"
+                                : "text-slate-400"
                           }
                         />
                         <h3
-                          className={`text-xs sm:text-sm font-bold ${
-                            active
-                              ? "text-emerald-950 dark:text-emerald-200"
-                              : complete
+                          className={`text-xs sm:text-sm font-bold ${active
+                            ? "text-emerald-950 dark:text-emerald-200"
+                            : complete
                               ? "text-slate-800 dark:text-slate-200"
                               : "text-slate-400 dark:text-slate-500"
-                          }`}
+                            }`}
                         >
                           {title}
                         </h3>
                       </div>
 
                       <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          complete
-                            ? "bg-emerald-100/80 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300"
-                            : active
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${complete
+                          ? "bg-emerald-100/80 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300"
+                          : active
                             ? "bg-emerald-500 text-white font-medium shadow-xs"
                             : "text-slate-400 bg-slate-100 dark:bg-slate-800"
-                        }`}
+                          }`}
                       >
                         {complete ? "Complete" : active ? "In progress" : "Waiting"}
                       </span>
                     </div>
                     <p
-                      className={`text-[11px] sm:text-xs mt-0.5 leading-relaxed ${
-                        active
-                          ? "text-slate-600 dark:text-slate-300"
-                          : complete
+                      className={`text-[11px] sm:text-xs mt-0.5 leading-relaxed ${active
+                        ? "text-slate-600 dark:text-slate-300"
+                        : complete
                           ? "text-slate-500 dark:text-slate-400"
                           : "text-slate-400 dark:text-slate-500"
-                      }`}
+                        }`}
                     >
                       {detail}
                     </p>
