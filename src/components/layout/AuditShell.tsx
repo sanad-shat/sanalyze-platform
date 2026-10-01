@@ -63,7 +63,7 @@ function InlineLogo() {
         <span className="text-base font-black tracking-tight text-slate-900 dark:text-white leading-tight">
           SAN<span className="text-emerald-700 dark:text-emerald-400">ALYZE</span>
         </span>
-        <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase leading-none mt-0.5">
+        <span className="text-[10px] font-bold tracking-wider text-slate-600 dark:text-slate-400 uppercase leading-none mt-0.5">
           AUDIT CONSOLE
         </span>
       </div>
