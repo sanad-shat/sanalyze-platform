@@ -386,7 +386,7 @@ function AIInsightsContent() {
       <AuditShell title="AI Insights">
         <div className="max-w-md mx-auto px-4 -mt-5 pt-8 text-center">
           <div className="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#0c121e]">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mx-auto mb-3">
               <Check size={24} />
             </div>
             <h1 className="text-base font-bold text-slate-900 dark:text-white">

@@ -341,7 +341,7 @@ export default function ReportPage() {
       <AuditShell title="Report">
         <div className="max-w-4xl mx-auto px-4 -mt-5">
           <div className="p-12 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0c121e] flex flex-col items-center justify-center gap-3">
-            <RefreshCw size={24} className="animate-spin text-emerald-500" />
+            <RefreshCw size={24} className="animate-spin text-emerald-700 dark:text-emerald-400" />
             <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">
               Generating report overview...
             </span>
@@ -461,7 +461,7 @@ export default function ReportPage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-2.5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mb-2.5">
                 <ShieldCheck size={16} />
               </div>
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Score</span>
@@ -500,7 +500,7 @@ export default function ReportPage() {
             </div>
 
             <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-2.5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mb-2.5">
                 <CheckCircle2 size={16} />
               </div>
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Passed</span>

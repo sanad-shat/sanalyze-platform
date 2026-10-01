@@ -238,7 +238,7 @@ function InspectorContent() {
       <AuditShell title="Visual Inspector">
         <div className="max-w-md mx-auto px-4 -mt-5 pt-8 text-center">
           <div className="p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#0c121e]">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3 mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mb-3 mx-auto">
               <Check size={24} />
             </div>
             <h1 className="text-base font-bold text-slate-900 dark:text-white">
@@ -385,7 +385,7 @@ function InspectorContent() {
                     onClick={copyElement}
                     className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 transition cursor-pointer"
                   >
-                    {copied ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
+                    {copied ? <Check size={12} className="text-emerald-700 dark:text-emerald-400" /> : <Copy size={12} />}
                     {copied ? "Copied" : "Copy HTML"}
                   </button>
                 </div>
@@ -499,7 +499,7 @@ function InspectorContent() {
                     </strong>
                     <span className="text-[10px] font-mono text-slate-400">axe: {current.id}</span>
                   </div>
-                  <ExternalLink size={14} className="text-slate-400 group-hover:text-emerald-500 transition" />
+                  <ExternalLink size={14} className="text-slate-400 group-hover:text-emerald-700 dark:text-emerald-400 transition" />
                 </a>
               ) : (
                 <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800">

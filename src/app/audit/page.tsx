@@ -141,7 +141,7 @@ function AuditContent() {
     return (
       <AuditShell title="Overview">
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-          <div className="relative flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 mb-4 animate-pulse">
+          <div className="relative flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 mb-4 animate-pulse">
             <RefreshCw size={28} className="animate-spin" />
           </div>
           <h2 className="text-xl font-bold tracking-tight text-slate-800 dark:text-slate-100">
@@ -301,7 +301,7 @@ function AuditContent() {
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 Overall Score
               </span>
-              <ShieldCheck size={18} className="text-emerald-500" />
+              <ShieldCheck size={18} className="text-emerald-700 dark:text-emerald-400" />
             </div>
 
             <div className="py-5 flex justify-center items-center">
@@ -362,7 +362,7 @@ function AuditContent() {
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 Passed Rules
               </span>
-              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500">
+              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">
                 <CheckCircle2 size={18} />
               </div>
             </div>
@@ -466,7 +466,7 @@ function AuditContent() {
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <Sparkles size={17} className="text-emerald-500" />
+                    <Sparkles size={17} className="text-emerald-700 dark:text-emerald-400" />
                     Score Progression
                   </h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -475,7 +475,7 @@ function AuditContent() {
                 </div>
 
                 <div className="flex items-baseline gap-1.5 px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800">
-                  <span className="text-base font-extrabold text-emerald-500">{audit?.score ?? 100}</span>
+                  <span className="text-base font-extrabold text-emerald-700 dark:text-emerald-400">{audit?.score ?? 100}</span>
                   <span className="text-[10px] uppercase font-bold text-slate-400">Latest</span>
                 </div>
               </div>
@@ -547,7 +547,7 @@ function AuditContent() {
 
           <article className="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl p-5 sm:p-6 flex flex-col justify-between shadow-sm">
             <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200 font-semibold text-xs">
-              <ShieldAlert size={16} className="text-emerald-500" />
+              <ShieldAlert size={16} className="text-emerald-700 dark:text-emerald-400" />
               <span>Audit Snapshot</span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed my-2">

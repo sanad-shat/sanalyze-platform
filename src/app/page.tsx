@@ -298,7 +298,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-3 pt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
               {["No account required", "Axe-core engine", "AI code fixes", "Executive PDF reports"].map((item) => (
                 <span key={item} className="flex items-center gap-1.5 bg-slate-100/60 dark:bg-slate-900/60 px-2.5 py-1 rounded-lg">
-                  <CheckCircle2 size={13} className="text-emerald-500" />
+                  <CheckCircle2 size={13} className="text-emerald-700 dark:text-emerald-400" />
                   {item}
                 </span>
               ))}
@@ -325,7 +325,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={focusScanner}
-                  className="px-2.5 py-1 text-[10px] font-semibold rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-emerald-500 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 text-[10px] font-semibold rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:text-emerald-400 transition-colors cursor-pointer"
                 >
                   Try a scan
                 </button>
@@ -396,7 +396,7 @@ export default function Home() {
                   <ArrowRight size={10} />
                   <span>Visual Inspector</span>
                   <ArrowRight size={10} />
-                  <span className="text-emerald-500">AI Fixes</span>
+                  <span className="text-emerald-700 dark:text-emerald-400">AI Fixes</span>
                 </div>
               </div>
             </div>
@@ -422,7 +422,7 @@ export default function Home() {
                   }`}
               >
                 <div>
-                  <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mb-2.5">
                     <Icon size={17} />
                   </div>
                   <h3 className="text-xs font-bold text-slate-900 dark:text-white mb-1">{title}</h3>
@@ -510,7 +510,7 @@ export default function Home() {
                 "AI-assisted remediation explanations",
               ].map((item) => (
                 <div key={item} className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
-                  <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
+                  <CheckCircle2 size={14} className="text-emerald-700 dark:text-emerald-400 shrink-0" />
                   <span>{item}</span>
                 </div>
               ))}
@@ -598,7 +598,7 @@ export default function Home() {
               "Direct PDF executive reporting",
             ].map((item) => (
               <div key={item} className="flex items-center gap-2 p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
-                <CheckCircle2 size={15} className="text-emerald-500 shrink-0" />
+                <CheckCircle2 size={15} className="text-emerald-700 dark:text-emerald-400 shrink-0" />
                 <span>{item}</span>
               </div>
             ))}
